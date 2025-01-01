@@ -231,21 +231,43 @@ const _karing = {
 
 // 使用示例
 
-// // 设置 PID
+// // 预设 PID
 // (async function () {
 //     try {
-//         const result = _karing.prepare({PID});
-//         console.log("prepare return, next step...", result);
+//         //参数:
+//         //  PID 在harry后台创建服务商时 自动分配的id
+//         //  预设的意义在于预加载配置文件
+//         //      1.校验配置.
+//         //      2.减少后续用户等待时间.
+//         const result = _karing.prepare(PID);
+//         if (result == '') {
+//             //3秒自动关闭提示框
+//             _karing.toast('Successfully prepared, next step...', true, 3);
+//         }
+//         else {
+//             _karing.error('prepare failed, err:', result);
+//         }
 //     } catch (error) {
 //         console.error('Preparation failed:', error);
 //     }
 // })();
 
-// // 添加订阅链接
+// // 添加karing配置
 // window.onload = async function () {
 //     try {
-//         const result = await _karing.config('{PID}', '{uname}', '{link}', '{link-name}');
-//         console.log("config return, next step...", result);
+//         //参数:
+//         //  PID置空 app自动读取prepare设置的值
+//         //  user_nick: 用户昵称
+//         //  link: 机场订阅链接
+//         //  link_name: 订阅名称, 可用机场名
+//         const result = await _karing.config(null, user_nick, link, link_name);
+//         if (result == '') {
+//             //3秒自动关闭提示框
+//             _karing.toast('Import configuration successful, enjoy!', true, 3);
+//         }
+//         else {
+//             _karing.error('config failed, err:', result);
+//         }
 //     } catch (error) {
 //         console.error('Configuration failed:', error);
 //     }
