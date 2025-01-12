@@ -1,6 +1,6 @@
 /**
  * @fileoverview
- * This file is an example of connecting v2board to Karing. The logic flow is as follows:
+ * This file is an example of connecting Xboard to Karing. The logic flow is as follows:
  *      - Determine whether it is in a webview.
  *      - Check for the presence of a process cookie flag.
  *      - Verify the user's login status.
@@ -8,11 +8,11 @@
  *      - Fetch the user's subscription information and submit it to the Karing configuration interface.
  *
  * @author Development Team KaringX, elon
- * @created 2024-12-21
+ * @created 2025-01-11
  * @version 1.0.0
  *
  * @see {@link https://karing.app/category/cooperation} for more information about the Karing APP.
- * @see {@link https://github.com/v2board/v2board} for more information about the V2Board platform.
+ * @see {@link https://github.com/cedar2025/Xboard} for more information about the XBoard platform.
  *
  * @license MIT License
  *
@@ -78,7 +78,7 @@ window.onload = function () {
     if (['#/register', '#/login'].includes(urlpath)) {
         log('in login page, ', window.location.hash);
         //监听页面变化
-        const targetNode = document.getElementById('root');
+        const targetNode = document.querySelector('#app .n-config-provider');
         // 创建 MutationObserver 实例，并传入回调函数
         const observer = new MutationObserver(function (mutationsList, observer) {
             mutationsList.forEach(mutation => {
@@ -95,19 +95,15 @@ window.onload = function () {
         if (targetNode) {
             observer.observe(targetNode, { childList: true });
         } else {
-            log('cant find targetNode: #page-container');
+            log('cant find targetNode: #ap .n-config-provider');
         }
 
     } else if (urlpath.startsWith('#/')) {
         log('in user page, ', window.location.hash);
+        // 直接载入js 试图使用_karing
+        load_js();
+        return;
 
-        // 查找第一个 href 为 '/#/profile' 的 a 元素
-        const link = document.querySelector('a[href="/#/profile"]');
-        if (link) {
-            load_js();
-            return;
-        }
-        log('profile link not found.');
     } else {
         log('not in user page, ', window.location.hash);
     }
@@ -120,7 +116,7 @@ window.onload = function () {
 
         const api_list = [
             '/api/v1/user/getSubscribe',
-            '/api/v1/user/subscribe',  //兼容部分api
+            // '/api/v1/user/subscribe',  //兼容部分api
         ];
 
         if (!debug && !k.available()) {
@@ -128,10 +124,13 @@ window.onload = function () {
             return;
         }
 
+
+        const token = localStorage.getItem('VUE_NAIVE_ACCESS_TOKEN');
+
         //get user subscribe_url
         for (let i = 0; i < api_list.length; i++) {
             k.log('fetch data from ', api_list[i]);
-            k.get(api_list[i]).then(function (data) {
+            k.get(api_list[i], { author: 'Authorization', token: JSON.parse(token).value }).then(function (data) {
 
                 if (data.data && data.data.subscribe_url) {
                     uname = data.data.email;            //用户名使用邮箱

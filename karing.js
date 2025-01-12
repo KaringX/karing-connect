@@ -5,7 +5,7 @@
  *
  * @author Development Team KaringX, elon
  * @created 2024-12-21
- * @version 1.0.0
+ * @version 1.0.1
  *
  * @see {@link https://karing.app/category/cooperation} for more information about the Karing APP.
  * @see {@link https://github.com/karingX/karing}
@@ -185,11 +185,12 @@ const _karing = {
             ...{
                 'with_bearer': false,
                 'author': 'authorization',
+                'token': null,
             }, ...options
         };
 
         // 获取 localStorage 中的 authorization token
-        const token = localStorage.getItem(opts.author);
+        const token = (opts.token === null) ? localStorage.getItem(opts.author) : opts.token;
 
         // 构造请求头
         const headers = new Headers();
@@ -226,7 +227,32 @@ const _karing = {
                 this.error('Request failed: ', error);
                 return false;
             });
-    }
+    },
+
+    // Cookie object with get, set, and delete methods
+    cookie: {
+        // Get a cookie by name
+        get: function (name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        },
+
+        // Set a cookie with a name, value, and optional expiration in hours
+        set: function (name, value, hours = 24) {
+            const d = new Date();
+            d.setTime(d.getTime() + (hours * 60 * 60 * 1000)); // Set expiry time in hours
+            const expires = `expires=${d.toUTCString()}`;
+            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        },
+
+        // Delete a cookie by name
+        del: function (name) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        }
+    },
+
 };
 
 // 使用示例

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Karing Connect</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            const date = new Date();
+            date.setTime(date.getTime() + 60 * 60 * 1000); // 将时间设置为1小时后
+            const expires = "expires=" + date.toUTCString();
+            let cookieStr = `karing=connect; ${expires}; path=/`;
+            if (window.location.protocol === 'https:') {
+                cookieStr += '; Secure=true; SameSite=None';
+            }
+            document.cookie = cookieStr;
+            //go back to home page
+            window.location.href = '/#/login';
+        };
+    </script>
+</head>
+
+<body>
+    <p><a href="/">Click to return to the HomePage</a></p>
+</body>
+
+</html>
