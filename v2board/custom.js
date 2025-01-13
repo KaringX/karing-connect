@@ -163,6 +163,12 @@ window.onload = function () {
                 }
             })
         }
+
+        if (!debug) {
+            //删除cookie标记
+            k.cookie.del('karing');
+            k.log('del cookie: karing');
+        }
     };
 };
 // end
