@@ -127,6 +127,38 @@ const _karing = {
         }
     },
 
+    // 当前ISP name
+    providerInfo: async function () {
+        try {
+            const result = await this.callHandler('ispInfo');
+            res = this.parseIfJson(result);
+            if (typeof res === "object") {
+                return res;
+            }
+        } catch (error) {
+            this.log(`Failed to get provider info: ${error}`);
+        }
+        return null;
+    },
+
+    parseIfJson: function (ret) {
+        if (typeof ret !== "string") {
+            return ret; // 直接返回，不是字符串就不用解析
+        }
+
+        try {
+            const parsed = JSON.parse(ret);
+            if (typeof parsed === "object" && parsed !== null) {
+                return parsed; // 成功解析并且是对象，返回解析后的对象
+            }
+        } catch (e) {
+            // 解析失败，说明不是 JSON 格式
+            return null;
+        }
+
+        return ret; // 解析失败则返回原字符串
+    },
+
     // 显示成功提示框
     showMessage: function (message, autoClose = true, autoCloseDelay = 10) {
         const modalMessage = document.querySelector('#karing-modal-message');
